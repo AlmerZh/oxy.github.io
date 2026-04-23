@@ -166,7 +166,11 @@ function handleSave() {
     // Отправляем в Google Таблицу
     fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(data)
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(data),
+        redirect: 'follow'
     })
     .then(r => r.text())
     .then(result => {
