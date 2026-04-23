@@ -158,35 +158,31 @@ function handleSave() {
         object: object
     };
 
-    console.log('Saving data:', JSON.stringify(data));
+    console.log('=== SAVE CLICKED ===');
+    console.log('Data:', JSON.stringify(data));
 
     if (window.WebApp) {
+        // Send data to bot via sendData
+        const payload = JSON.stringify(data);
         try {
-            const payload = JSON.stringify(data);
-            const ret = window.WebApp.sendData(payload);
-            console.log('sendData called, ret:', ret);
+            // This should trigger close and send data to bot
+            window.WebApp.sendData(payload);
+            console.log('sendData called with:', payload);
             
-            if (ret && typeof ret.then === 'function') {
-                ret.then(() => { 
-                    console.log('Data sent successfully, now closing app');
+            // Try to close the app after sending
+            setTimeout(() => {
+                if (window.WebApp.close) {
                     window.WebApp.close();
-                }).catch((e) => { 
-                    console.error('Send error:', e);
-                    window.WebApp.close();
-                });
-            } else {
-                // If not a promise, try to close anyway after short delay
-                setTimeout(() => {
-                    try { window.WebApp.close(); } catch(e) {}
-                }, 200);
-            }
-        } catch (e) {
-            console.error('sendData error:', e);
+                    console.log('App closed');
+                }
+            }, 300);
+        } catch(e) {
+            console.error('Error:', e);
         }
     } else {
-        console.log('WebApp not available');
+        console.log('WebApp not found!');
     }
-
+    
     showMainScreen();
 }
 
