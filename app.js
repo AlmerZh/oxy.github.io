@@ -159,11 +159,26 @@ function handleSave() {
     };
 
     if (window.WebApp) {
-        window.WebApp.sendData(JSON.stringify(data));
+        try {
+            const payload = JSON.stringify(data);
+            const ret = window.WebApp.sendData(payload);
+            if (ret && typeof ret.then === 'function') {
+                ret.then(() => {}).catch(() => {});
+            }
+        } catch (e) {
+            console.error('sendData error', e);
+        }
         setTimeout(() => {
-            window.WebApp.close();
-        }, 100);
+            try {
+                if (typeof window.WebApp.close === 'function') window.WebApp.close();
+                else if (typeof window.WebApp.closeApp === 'function') window.WebApp.closeApp();
+            } catch (e) {
+                console.error('close error', e);
+            }
+        }, 150);
     }
+
+    // Do not call showMainScreen() to allow the mini-app to close gracefully
 }
 
 document.addEventListener('DOMContentLoaded', init);
