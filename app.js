@@ -146,7 +146,7 @@ function validateForm() {
     saveBtn.disabled = !objectSelect.value;
 }
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOMoJkm6myV-c2zuzehu3FizhMepIXT1qgc7w-_5g84DRrtjMZ3Sv2sAHmEWYquzu-Gw/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8brlyLGAnYNsSlaMsbnP4h_dVkl1wpUMXUoi7S-sBayWDNKx7cdDy7JGewFTThKSQOA/exec';
 const CHAT_ID = '70605685';
 
 function handleSave() {
@@ -165,15 +165,22 @@ function handleSave() {
     console.log('=== SAVE CLICKED ===');
     console.log('Data:', JSON.stringify(data));
 
-    // Отправляем в Google Таблицу
-    var url = GOOGLE_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(data));
+    // Отправляем в Google Таблицу через форму
+    var formData = 'data=' + encodeURIComponent(JSON.stringify(data));
+    var url = GOOGLE_SCRIPT_URL;
     console.log('Sending to:', url);
+    console.log('Data:', formData);
+    
     fetch(url, {
-        method: 'GET',
-        mode: 'no-cors'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData
     })
-    .then(r => {
-        console.log('Response:', r);
+    .then(r => r.text())
+    .then(result => {
+        console.log('Response:', result);
         alert('Данные сохранены!\n\n' +
               'Дата: ' + date + '\n' +
               'Пользователь: ' + fullName + '\n' +
