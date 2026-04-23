@@ -160,7 +160,9 @@ function handleSave() {
 
     if (window.WebApp) {
         window.WebApp.sendData(JSON.stringify(data));
-        window.WebApp.close();
+        setTimeout(() => {
+            window.WebApp.close();
+        }, 100);
     }
 }
 
