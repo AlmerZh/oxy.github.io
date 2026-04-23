@@ -158,27 +158,36 @@ function handleSave() {
         object: object
     };
 
+    console.log('Saving data:', JSON.stringify(data));
+
     if (window.WebApp) {
         try {
             const payload = JSON.stringify(data);
             const ret = window.WebApp.sendData(payload);
+            console.log('sendData called, ret:', ret);
+            
             if (ret && typeof ret.then === 'function') {
-                ret.then(() => {}).catch(() => {});
+                ret.then(() => { 
+                    console.log('Data sent successfully, now closing app');
+                    window.WebApp.close();
+                }).catch((e) => { 
+                    console.error('Send error:', e);
+                    window.WebApp.close();
+                });
+            } else {
+                // If not a promise, try to close anyway after short delay
+                setTimeout(() => {
+                    try { window.WebApp.close(); } catch(e) {}
+                }, 200);
             }
         } catch (e) {
-            console.error('sendData error', e);
+            console.error('sendData error:', e);
         }
-        setTimeout(() => {
-            try {
-                if (typeof window.WebApp.close === 'function') window.WebApp.close();
-                else if (typeof window.WebApp.closeApp === 'function') window.WebApp.closeApp();
-            } catch (e) {
-                console.error('close error', e);
-            }
-        }, 150);
+    } else {
+        console.log('WebApp not available');
     }
 
-    // Do not call showMainScreen() to allow the mini-app to close gracefully
+    showMainScreen();
 }
 
 document.addEventListener('DOMContentLoaded', init);
