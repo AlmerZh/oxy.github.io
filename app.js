@@ -51,8 +51,6 @@ const OBJECTS = [
     'Сокол'
 ];
 
-const APP_URL = "https://almerzh.github.io/oxy.github.io/";
-
 let currentUser = {
     firstName: '',
     lastName: ''
@@ -61,20 +59,6 @@ let currentUser = {
 function init() {
     setupEventListeners();
     showRegistrationScreen();
-    
-    // Слушаем событие закрытия приложения
-    if (window.WebApp && window.WebApp.eventHandlers) {
-        window.WebApp.eventHandlers.push({
-            event: 'close',
-            callback: function() {
-                console.log('App closing...');
-                const data = localStorage.getItem('last_record');
-                if (data) {
-                    console.log('Sending saved data on close:', data);
-                }
-            }
-        });
-    }
 }
 
 function setupEventListeners() {
@@ -187,16 +171,16 @@ function handleSave() {
         } catch(e) {}
     }
 
-    // Показываем данные и просим отправить команду
+    // Показываем данные
     alert('Данные сохранены!\n\n' +
           'Дата: ' + date + '\n' +
           'Пользователь: ' + fullName + '\n' +
           'Объект: ' + object + '\n\n' +
-          'Нажмите ОК, затем отправьте боту команду /save для подтверждения.');
-    
+          'Нажмите ОК, затем отправьте боту команду /save');
+
     showMainScreen();
 }
-    
+
 document.addEventListener('DOMContentLoaded', init);
 
 setTimeout(() => {
