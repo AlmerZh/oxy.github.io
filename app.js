@@ -146,6 +146,8 @@ function validateForm() {
     saveBtn.disabled = !objectSelect.value;
 }
 
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydQ4_dSND_CIlDlusFmO6pmlZ0idZ_bc5TVdjU8FlPzsSTUaNPJiC0wfVXqfzPEiZ1vw/exec';
+
 function handleSave() {
     const date = document.getElementById('current-date').value;
     const object = document.getElementById('object-select').value;
@@ -161,22 +163,24 @@ function handleSave() {
     console.log('=== SAVE CLICKED ===');
     console.log('Data:', JSON.stringify(data));
 
-    // Сохраняем локально
-    localStorage.setItem('pending_save', JSON.stringify(data));
-
-    // Пробуем использовать sendData
-    if (window.WebApp) {
-        try {
-            window.WebApp.sendData(JSON.stringify(data));
-        } catch(e) {}
-    }
+    // Отправляем в Google Таблицу
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+    .then(r => r.text())
+    .then(result => {
+        console.log('Google Sheet response:', result);
+    })
+    .catch(err => {
+        console.error('Error sending to Google:', err);
+    });
 
     // Показываем данные
     alert('Данные сохранены!\n\n' +
           'Дата: ' + date + '\n' +
           'Пользователь: ' + fullName + '\n' +
-          'Объект: ' + object + '\n\n' +
-          'Нажмите ОК, затем отправьте боту команду /save');
+          'Объект: ' + object);
 
     showMainScreen();
 }
