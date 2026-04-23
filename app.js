@@ -146,7 +146,7 @@ function validateForm() {
     saveBtn.disabled = !objectSelect.value;
 }
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8cH3ItWx3VZzv5HaxgFfk7cGdEltOCR3U-aK2Op7KW4-8-0gRqc6NslfPmJ45ZdlVrg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtURsz1BcfI1YxG-baYs8SI0qP-frcPuzkGxQCcPmUcSzH8tlg7aoDZZIR1PIe_M_vPA/exec';
 const CHAT_ID = '70605685';
 
 function handleSave() {
@@ -167,19 +167,20 @@ function handleSave() {
 
     // Отправляем в Google Таблицу
     var url = GOOGLE_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(data));
+    console.log('Sending to:', url);
     fetch(url, {
-        method: 'GET'
+        method: 'GET',
+        mode: 'no-cors'
     })
-    .then(r => r.text())
-    .then(result => {
-        console.log('Google Sheet response:', result);
+    .then(r => {
+        console.log('Response:', r);
         alert('Данные сохранены!\n\n' +
               'Дата: ' + date + '\n' +
               'Пользователь: ' + fullName + '\n' +
               'Объект: ' + object);
     })
     .catch(err => {
-        console.error('Error sending to Google:', err);
+        console.error('Error:', err);
         alert('Ошибка сохранения');
     });
 
