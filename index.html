@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="registration-screen" class="screen">
+            <h2>Регистрация</h2>
+            <div class="form-group">
+                <label for="first-name">Имя</label>
+                <input type="text" id="first-name" placeholder="Введите имя">
+            </div>
+            <div class="form-group">
+                <label for="last-name">Фамилия</label>
+                <input type="text" id="last-name" placeholder="Введите фамилию">
+            </div>
+            <button id="register-btn" class="btn">Зарегистрироваться</button>
+        </div>
+
+        <div id="main-screen" class="screen hidden">
+            <h2>Главное меню</h2>
+            <button id="add-entry-btn" class="btn btn-primary">Добавить запись</button>
+        </div>
+
+        <div id="entry-screen" class="screen hidden">
+            <h2>Новая запись</h2>
+            <div class="form-group">
+                <label for="current-date">Текущая дата</label>
+                <input type="text" id="current-date" readonly>
+            </div>
+            <div class="form-group">
+                <label for="object-select">Объект</label>
+                <select id="object-select">
+                    <option value="">Выберите объект</option>
+                </select>
+            </div>
+            <div class="buttons-row">
+                <button id="cancel-btn" class="btn">Отмена</button>
+                <button id="save-btn" class="btn btn-primary" disabled>Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://st.max.ru/js/max-web-app.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
