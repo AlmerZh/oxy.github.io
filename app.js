@@ -153,42 +153,38 @@ function handleSave() {
     const object = document.getElementById('object-select').value;
     const fullName = currentUser.firstName + ' ' + currentUser.lastName;
 
-    const data = {
-        action: 'save_record',
-        date: date,
-        user: fullName,
-        object: object
-    };
+    // Формат: как ожидает бот
+    const text = '{"action":"save_record","date":"' + date + '","user":"' + fullName + '","object":"' + object + '"}';
 
     console.log('=== SAVE CLICKED ===');
-    console.log('Data:', JSON.stringify(data));
-    console.log('All window keys:', Object.keys(window).join(', '));
+    console.log('Sending:', text);
 
-    if (window.WebApp) {
-        console.log('WebApp keys:', Object.keys(window.WebApp).join(', '));
-        
-        const payload = JSON.stringify(data);
-        
-        if (typeof window.WebApp.sendData === 'function') {
-            window.WebApp.sendData(payload);
-            console.log('Used sendData');
-        } else {
-            console.log('sendData NOT found!');
-        }
-        
-        setTimeout(() => {
-            try {
-                if (window.WebApp.close) {
-                    window.WebApp.close();
-                    console.log('Used close');
-                }
-            } catch(e) {
-                console.log('Close error:', e);
-            }
-        }, 500);
-    } else {
-        console.log('WebApp NOT found!');
+    // Try Telegram.WebApp (it sends data to bot)
+    if (window.Telegram && window.Telegram.WebApp) {
+        console.log('Using Telegram.WebApp...');
+        window.Telegram.WebApp.sendData(text);
     }
+    // Try MAX WebApp
+    else if (window.WebApp) {
+        if (typeof window.WebApp.sendData === 'function') {
+            window.WebApp.sendData(text);
+            console.log('Used WebApp.sendData');
+        } else {
+            // Fallback: just close
+            console.log('No sendData, closing app');
+        }
+    }
+    
+    // Close the app
+    setTimeout(() => {
+        try { 
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close();
+            } else if (window.WebApp && window.WebApp.close) {
+                window.WebApp.close();
+            }
+        } catch(e) {}
+    }, 200);
     
     showMainScreen();
 }
