@@ -177,14 +177,25 @@ function handleSave() {
     console.log('=== SAVE CLICKED ===');
     console.log('Data:', JSON.stringify(data));
 
-    // Пробуем отправить данные
-    if (window.WebApp && typeof window.WebApp.sendData === 'function') {
+    // Сохраняем локально
+    localStorage.setItem('pending_save', JSON.stringify(data));
+
+    // Пробуем использовать sendData
+    if (window.WebApp) {
         try {
             window.WebApp.sendData(JSON.stringify(data));
-            console.log('sendData done');
-        } catch(e) {
-            console.log('Error:', e);
-        }
+        } catch(e) {}
+    }
+
+    // Показываем данные и просим отправить команду
+    alert('Данные сохранены!\n\n' +
+          'Дата: ' + date + '\n' +
+          'Пользователь: ' + fullName + '\n' +
+          'Объект: ' + object + '\n\n' +
+          'Нажмите ОК, затем отправьте боту команду /save для подтверждения.');
+    
+    showMainScreen();
+}
     }
     
     // Переходим в главное меню
