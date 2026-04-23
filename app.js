@@ -51,6 +51,8 @@ const OBJECTS = [
     'Сокол'
 ];
 
+const APP_URL = "https://almerzh.github.io/oxy.github.io/";
+
 let currentUser = {
     firstName: '',
     lastName: ''
@@ -160,46 +162,32 @@ function handleSave() {
 
     console.log('=== SAVE CLICKED ===');
     console.log('Data:', JSON.stringify(data));
+    console.log('All window keys:', Object.keys(window).join(', '));
 
     if (window.WebApp) {
-        console.log('WebApp methods:', Object.keys(window.WebApp));
+        console.log('WebApp keys:', Object.keys(window.WebApp).join(', '));
         
-        // Try different methods
-        try {
-            const payload = JSON.stringify(data);
-            
-            // Method 1: sendData
-            if (typeof window.WebApp.sendData === 'function') {
-                window.WebApp.sendData(payload);
-                console.log('Used sendData');
-            }
-            // Method 2: maybe as property  
-            else if (window.WebApp.data && typeof window.WebApp.data === 'function') {
-                window.WebApp.data(payload);
-                console.log('Used WebApp.data');
-            }
-            // Method 3: postMessage for hybrid apps
-            else if (window.parent && typeof window.parent.postMessage === 'function') {
-                window.parent.postMessage(payload, '*');
-                console.log('Used postMessage');
-            }
-            else {
-                console.log('No send method found!');
-            }
-            
-            // Try to close
-            setTimeout(() => {
-                try {
-                    if (window.WebApp.close) window.WebApp.close();
-                    else if (window.WebApp.closeApp) window.WebApp.closeApp();
-                } catch(e) {}
-            }, 300);
-            
-        } catch(e) {
-            console.error('Error:', e);
+        const payload = JSON.stringify(data);
+        
+        if (typeof window.WebApp.sendData === 'function') {
+            window.WebApp.sendData(payload);
+            console.log('Used sendData');
+        } else {
+            console.log('sendData NOT found!');
         }
+        
+        setTimeout(() => {
+            try {
+                if (window.WebApp.close) {
+                    window.WebApp.close();
+                    console.log('Used close');
+                }
+            } catch(e) {
+                console.log('Close error:', e);
+            }
+        }, 500);
     } else {
-        console.log('WebApp not found!');
+        console.log('WebApp NOT found!');
     }
     
     showMainScreen();
