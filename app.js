@@ -146,7 +146,7 @@ function validateForm() {
     saveBtn.disabled = !objectSelect.value;
 }
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5_Vj9qo6t8X51W_WLMMGoMGo3nnXC-LjmMDhojxDW60xwoeVRzELkTwiWeQTxRsVHkg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm5FROrpqP723SDxrWKdOLgh1O6mcTjzpV2UhD5Pf6W5VleE-OJ5DcvTgo7DcE-beTaA/exec';
 const CHAT_ID = '70605685';
 
 function handleSave() {
@@ -166,12 +166,8 @@ function handleSave() {
     console.log('Data:', JSON.stringify(data));
 
     // Отправляем в Google Таблицу
-    fetch(GOOGLE_SCRIPT_URL, {
+    fetch(GOOGLE_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(data)), {
         method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify(data),
         redirect: 'follow'
     })
     .then(r => r.text())
