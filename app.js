@@ -61,6 +61,20 @@ let currentUser = {
 function init() {
     setupEventListeners();
     showRegistrationScreen();
+    
+    // Слушаем событие закрытия приложения
+    if (window.WebApp && window.WebApp.eventHandlers) {
+        window.WebApp.eventHandlers.push({
+            event: 'close',
+            callback: function() {
+                console.log('App closing...');
+                const data = localStorage.getItem('last_record');
+                if (data) {
+                    console.log('Sending saved data on close:', data);
+                }
+            }
+        });
+    }
 }
 
 function setupEventListeners() {
@@ -153,39 +167,27 @@ function handleSave() {
     const object = document.getElementById('object-select').value;
     const fullName = currentUser.firstName + ' ' + currentUser.lastName;
 
-    // Формат: как ожидает бот
-    const text = '{"action":"save_record","date":"' + date + '","user":"' + fullName + '","object":"' + object + '"}';
+    const data = {
+        action: 'save_record',
+        date: date,
+        user: fullName,
+        object: object
+    };
 
     console.log('=== SAVE CLICKED ===');
-    console.log('Sending:', text);
+    console.log('Data:', JSON.stringify(data));
 
-    // Try Telegram.WebApp (it sends data to bot)
-    if (window.Telegram && window.Telegram.WebApp) {
-        console.log('Using Telegram.WebApp...');
-        window.Telegram.WebApp.sendData(text);
-    }
-    // Try MAX WebApp
-    else if (window.WebApp) {
-        if (typeof window.WebApp.sendData === 'function') {
-            window.WebApp.sendData(text);
-            console.log('Used WebApp.sendData');
-        } else {
-            // Fallback: just close
-            console.log('No sendData, closing app');
+    // Пробуем отправить данные
+    if (window.WebApp && typeof window.WebApp.sendData === 'function') {
+        try {
+            window.WebApp.sendData(JSON.stringify(data));
+            console.log('sendData done');
+        } catch(e) {
+            console.log('Error:', e);
         }
     }
     
-    // Close the app
-    setTimeout(() => {
-        try { 
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            } else if (window.WebApp && window.WebApp.close) {
-                window.WebApp.close();
-            }
-        } catch(e) {}
-    }, 200);
-    
+    // Переходим в главное меню
     showMainScreen();
 }
 
