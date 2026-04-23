@@ -147,6 +147,7 @@ function validateForm() {
 }
 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydQ4_dSND_CIlDlusFmO6pmlZ0idZ_bc5TVdjU8FlPzsSTUaNPJiC0wfVXqfzPEiZ1vw/exec';
+const CHAT_ID = '70605685';
 
 function handleSave() {
     const date = document.getElementById('current-date').value;
@@ -157,7 +158,8 @@ function handleSave() {
         action: 'save_record',
         date: date,
         user: fullName,
-        object: object
+        object: object,
+        chat_id: CHAT_ID
     };
 
     console.log('=== SAVE CLICKED ===');
@@ -175,16 +177,15 @@ function handleSave() {
     .then(r => r.text())
     .then(result => {
         console.log('Google Sheet response:', result);
+        alert('Данные сохранены!\n\n' +
+              'Дата: ' + date + '\n' +
+              'Пользователь: ' + fullName + '\n' +
+              'Объект: ' + object);
     })
     .catch(err => {
         console.error('Error sending to Google:', err);
+        alert('Ошибка сохранения');
     });
-
-    // Показываем данные
-    alert('Данные сохранены!\n\n' +
-          'Дата: ' + date + '\n' +
-          'Пользователь: ' + fullName + '\n' +
-          'Объект: ' + object);
 
     showMainScreen();
 }
