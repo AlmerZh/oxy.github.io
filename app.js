@@ -196,12 +196,7 @@ function handleSave() {
     
     showMainScreen();
 }
-    }
     
-    // Переходим в главное меню
-    showMainScreen();
-}
-
 document.addEventListener('DOMContentLoaded', init);
 
 setTimeout(() => {
