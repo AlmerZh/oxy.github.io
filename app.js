@@ -146,7 +146,7 @@ function validateForm() {
     saveBtn.disabled = !objectSelect.value;
 }
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZtLZoe2DFvhlmKXYEAf796F1NJykPA-RTGBlmza08G5dt34aLpbLg4fupdlfBqNiBdg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOMoJkm6myV-c2zuzehu3FizhMepIXT1qgc7w-_5g84DRrtjMZ3Sv2sAHmEWYquzu-Gw/exec';
 const CHAT_ID = '70605685';
 
 function handleSave() {
